@@ -230,3 +230,25 @@ html { scroll-behavior: smooth; }
   /* No floating badge jank on small screens */
   .float-badge { animation: none !important; }
 }
+
+/* Tap feedback for mobile */
+@media (pointer: coarse) {
+  .tap-feedback:active {
+    transform: scale(0.95);
+    transition: transform 0.1s;
+  }
+}
+
+/* Floating bar slide-up */
+@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.shadow-app {
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
+}

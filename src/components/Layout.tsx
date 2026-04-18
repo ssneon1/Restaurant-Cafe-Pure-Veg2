@@ -107,7 +107,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         )}
       </nav>
 
-      <main className="flex-1 pb-20 md:pb-0">{children}</main>
+      <main className="flex-1 pb-40 md:pb-0">{children}</main>
 
       {/* Footer */}
       <footer className="bg-stone-900 text-stone-300 mt-12">

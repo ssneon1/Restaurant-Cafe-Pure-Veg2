@@ -5,6 +5,8 @@ import { menuData } from '../data';
 import MenuItemCard from '../components/MenuItemCard';
 import SkeletonCard from '../components/SkeletonCard';
 import Slider3D from '../components/Slider3D';
+import BottomCartBar from '../components/BottomCartBar';
+import CartDrawer from '../components/CartDrawer';
 import { useReveal } from '../utils/useReveal';
 
 type FilterType = 'all' | 'bestseller' | 'popular' | 'spicy';
@@ -98,6 +100,7 @@ export default function Menu() {
   const [filter, setFilter]     = useState<FilterType>('all');
   const [activeCat, setActiveCat] = useState(menuData[0].id);
   const [loading, setLoading]   = useState(true);
+  const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
 
   // First-paint skeleton delay
   useEffect(() => {
@@ -154,6 +157,8 @@ export default function Menu() {
   return (
     <>
       <PageLoadBar />
+      <BottomCartBar onViewCart={() => setCartDrawerOpen(true)} />
+      <CartDrawer open={cartDrawerOpen} onClose={() => setCartDrawerOpen(false)} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
@@ -236,15 +241,19 @@ export default function Menu() {
           {/* Main content */}
           <div className="space-y-10">
 
-            {/* Mobile pills */}
-            <div className="lg:hidden -mx-4 px-4 overflow-x-auto pb-2 flex gap-2">
+            {/* Mobile category pills */}
+            <div className="lg:hidden -mx-4 px-4 overflow-x-auto pb-4 flex gap-2 sticky top-32 z-10 bg-stone-50/80 backdrop-blur-sm pt-2">
               {menuData.map((cat) => (
                 <a
                   key={cat.id}
                   href={`#cat-${cat.id}`}
-                  className="shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-white border border-stone-200 hover:border-orange-400 hover:text-orange-600 transition-all hover:scale-105"
+                  className={`shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-2xl text-[11px] font-black transition-all shadow-sm border ${
+                    activeCat === cat.id
+                      ? 'bg-stone-900 text-white border-stone-900 shadow-md scale-105'
+                      : 'bg-white text-stone-600 border-stone-200 hover:border-orange-200 shadow-sm'
+                  }`}
                 >
-                  <span>{cat.icon}</span> {cat.name}
+                  <span className="text-sm">{cat.icon}</span> {cat.name}
                 </a>
               ))}
             </div>

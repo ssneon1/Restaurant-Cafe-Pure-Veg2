@@ -1,9 +1,14 @@
 import { useState } from 'react';
-import { Plus, Minus, Flame, Star, ShoppingCart } from 'lucide-react';
+import { Plus, Minus, Flame, Star, ShoppingBag } from 'lucide-react';
 import { MenuItem } from '../data';
 import { useCart } from '../CartContext';
 
-export default function MenuItemCard({ item, revealDelay = 0 }: { item: MenuItem; revealDelay?: number }) {
+interface MenuItemCardProps {
+  item: MenuItem;
+  revealDelay?: number;
+}
+
+export default function MenuItemCard({ item, revealDelay = 0 }: MenuItemCardProps) {
   const { cart, addToCart, updateQuantity } = useCart();
   const [selectedVariant, setSelectedVariant] = useState(item.variants?.[0]?.label);
   const [imgLoaded, setImgLoaded] = useState(false);
@@ -28,170 +33,127 @@ export default function MenuItemCard({ item, revealDelay = 0 }: { item: MenuItem
 
   return (
     <div
-      className="card-hover bg-white rounded-2xl border border-stone-200 overflow-hidden flex flex-col"
+      className="group relative bg-white rounded-3xl border border-stone-200 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex flex-row sm:flex-col p-2 sm:p-0"
       style={{ animationDelay: `${revealDelay}ms` }}
     >
-      {/* ══ Mobile layout: horizontal row (image | content) ══ */}
-      {/* ══ Desktop layout: stacked (image on top, content below) ══ */}
+      {/* ── Food Image ── */}
+      <div className="relative shrink-0 w-28 h-28 sm:w-full sm:h-48 rounded-2xl sm:rounded-none overflow-hidden bg-stone-100">
+        {item.image ? (
+          <>
+            {!imgLoaded && <div className="skeleton absolute inset-0" />}
+            <img
+              src={`${item.image}&auto=format&fit=crop&w=400&q=80`}
+              alt={item.name}
+              onLoad={() => setImgLoaded(true)}
+              className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-110 ${
+                imgLoaded ? 'opacity-100' : 'opacity-0'
+              }`}
+              loading="lazy"
+            />
+          </>
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-4xl">🍽️</div>
+        )}
 
-      {/* TOP SECTION — horizontal on mobile, full-width image on desktop */}
-      <div className="flex flex-row sm:flex-col">
-
-        {/* ── Food Image ── */}
-        {/* Mobile: fixed 110px square | Desktop: full-width 176px tall */}
-        <div className="relative shrink-0
-          w-[110px] h-[110px]
-          sm:w-full sm:h-44
-          bg-stone-100 overflow-hidden">
-
-          {item.image ? (
-            <>
-              {!imgLoaded && <div className="skeleton absolute inset-0" />}
-              <img
-                src={item.image}
-                alt={item.name}
-                onLoad={() => setImgLoaded(true)}
-                className={`img-zoom w-full h-full object-cover object-center transition-opacity duration-500 ${
-                  imgLoaded ? 'opacity-100' : 'opacity-0'
-                }`}
-                loading="lazy"
-              />
-            </>
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-4xl select-none">🍽️</div>
-          )}
-
-          {/* Veg/Non-veg dot */}
-          <span className="absolute top-1.5 right-1.5 bg-white/95 rounded p-0.5 shadow">
-            <span className={`flex items-center justify-center w-4 h-4 border-2 ${
-              item.veg ? 'border-green-600' : 'border-red-600'
-            }`}>
-              <span className={`w-2 h-2 rounded-full ${item.veg ? 'bg-green-600' : 'bg-red-600'}`} />
-            </span>
-          </span>
-
-          {/* Desktop-only: gradient + badge overlay on image */}
-          <div className="hidden sm:block absolute inset-x-0 bottom-0 h-14
-            bg-gradient-to-t from-black/45 to-transparent pointer-events-none" />
-          <div className="hidden sm:flex absolute bottom-2 left-2 gap-1 flex-wrap">
-            {item.bestseller && (
-              <span className="inline-flex items-center gap-0.5 text-[10px] font-bold
-                bg-amber-500 text-white px-1.5 py-0.5 rounded shadow">
-                <Star size={9} fill="currentColor" /> BESTSELLER
-              </span>
-            )}
-            {item.popular && !item.bestseller && (
-              <span className="text-[10px] font-bold bg-orange-500 text-white px-1.5 py-0.5 rounded shadow">
-                POPULAR
-              </span>
-            )}
-            {item.spicy && (
-              <span className="inline-flex items-center gap-0.5 text-[10px] font-bold
-                bg-red-600 text-white px-1.5 py-0.5 rounded shadow">
-                <Flame size={9} /> SPICY
-              </span>
-            )}
+        {/* Veg Dot */}
+        <div className="absolute top-2 right-2 z-10 p-0.5 bg-white/90 backdrop-blur-sm rounded-md shadow-sm">
+          <div className={`w-3.5 h-3.5 border-2 flex items-center justify-center rounded-sm ${item.veg ? 'border-green-600' : 'border-red-600'}`}>
+            <div className={`w-1.5 h-1.5 rounded-full ${item.veg ? 'bg-green-600' : 'bg-red-600'}`} />
           </div>
         </div>
 
-        {/* ── Content (right of image on mobile, below image on desktop) ── */}
-        <div className="flex flex-col flex-1 min-w-0 p-2.5 sm:p-4">
+        {/* Desktop Badges over image */}
+        <div className="hidden sm:flex absolute bottom-2 left-2 flex-wrap gap-1 z-10">
+          {item.bestseller && (
+            <span className="flex items-center gap-1 bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-lg animate-pulse">
+              <Star size={10} fill="currentColor" /> BESTSELLER
+            </span>
+          )}
+          {item.spicy && (
+            <span className="flex items-center gap-1 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-lg">
+              <Flame size={10} /> SPICY
+            </span>
+          )}
+        </div>
+      </div>
 
-          {/* Mobile badges */}
-          <div className="flex sm:hidden gap-1 flex-wrap mb-1">
-            {item.bestseller && (
-              <span className="inline-flex items-center gap-0.5 text-[9px] font-bold
-                bg-amber-500 text-white px-1.5 py-0.5 rounded">
-                <Star size={8} fill="currentColor" /> BESTSELLER
-              </span>
-            )}
-            {item.popular && !item.bestseller && (
-              <span className="text-[9px] font-bold bg-orange-500 text-white px-1.5 py-0.5 rounded">
-                POPULAR
-              </span>
-            )}
-            {item.spicy && (
-              <span className="inline-flex items-center gap-0.5 text-[9px] font-bold
-                bg-red-600 text-white px-1.5 py-0.5 rounded">
-                <Flame size={8} /> SPICY
-              </span>
-            )}
+      {/* ── Content Area ── */}
+      <div className="flex-1 flex flex-col px-3 sm:px-4 py-1 sm:py-4 min-w-0">
+        {/* Mobile Badges */}
+        <div className="flex sm:hidden gap-1 mb-1">
+          {item.bestseller && (
+            <span className="bg-amber-100 text-amber-700 text-[9px] font-bold px-1.5 py-0.5 rounded uppercase">Bestseller</span>
+          )}
+          {item.spicy && (
+            <span className="bg-red-100 text-red-700 text-[9px] font-bold px-1.5 py-0.5 rounded uppercase font-bold">Spicy</span>
+          )}
+        </div>
+
+        <h3 className="font-extrabold text-stone-900 leading-tight text-sm sm:text-lg line-clamp-2 mb-0.5">
+          {item.name}
+        </h3>
+
+        {item.description && (
+          <p className="text-stone-500 text-[11px] sm:text-xs line-clamp-2 mb-2 sm:mb-3">
+            {item.description}
+          </p>
+        )}
+
+        {/* Variants Selector */}
+        {item.variants && (
+          <div className="flex flex-wrap gap-1.5 mb-3">
+            {item.variants.map((v) => (
+              <button
+                key={v.label}
+                onClick={() => setSelectedVariant(v.label)}
+                className={`px-2 py-1 rounded-lg text-[10px] font-bold transition-all tap-feedback ${
+                  selectedVariant === v.label
+                    ? 'bg-stone-900 text-white shadow-md scale-105'
+                    : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+                }`}
+              >
+                {v.label}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Price & Action Row */}
+        <div className="mt-auto flex items-center justify-between">
+          <div className="flex flex-col">
+            <span className="text-[10px] text-stone-400 font-bold uppercase tracking-wider leading-none">Price</span>
+            <span className="text-base sm:text-xl font-black text-stone-900 leading-tight">₹{currentPrice}</span>
           </div>
 
-          {/* Item name */}
-          <h3 className="font-bold text-stone-900 leading-snug text-sm sm:text-base line-clamp-2">
-            {item.name}
-          </h3>
-
-          {/* Description — hidden on mobile to save space */}
-          {item.description && (
-            <p className="hidden sm:block text-xs text-stone-500 mt-1 mb-2 line-clamp-2">
-              {item.description}
-            </p>
-          )}
-
-          {/* Variants */}
-          {item.variants && (
-            <div className="flex gap-1 mt-1 flex-wrap">
-              {item.variants.map((v) => (
-                <button
-                  key={v.label}
-                  onClick={() => setSelectedVariant(v.label)}
-                  className={`px-1.5 py-0.5 rounded text-[10px] font-semibold transition-all ${
-                    selectedVariant === v.label
-                      ? 'bg-orange-600 text-white'
-                      : 'bg-stone-100 text-stone-600'
-                  }`}
-                >
-                  {v.label} ₹{v.price}
-                </button>
-              ))}
-            </div>
-          )}
-
-          {/* Price + ADD — always at the bottom */}
-          <div className="mt-auto pt-2 flex items-center justify-between gap-2">
-            <span className="font-extrabold text-stone-900 text-sm sm:text-lg">₹{currentPrice}</span>
-
+          <div className="relative">
             {qty === 0 ? (
               <button
                 onClick={handleAdd}
-                className="flex items-center gap-1 bg-gradient-to-r from-orange-500 to-red-500
-                  active:scale-95 text-white font-bold
-                  text-[11px] sm:text-sm px-2.5 sm:px-4 py-1.5 sm:py-2
-                  rounded-xl shadow-md transition-all duration-150 shrink-0"
+                className="flex items-center gap-1.5 bg-gradient-to-r from-orange-500 to-red-600 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-2xl text-xs sm:text-sm font-black shadow-lg shadow-orange-200 hover:shadow-xl hover:scale-105 transition-all tap-feedback"
               >
-                <ShoppingCart size={12} className="sm:hidden" />
-                <Plus size={12} className="hidden sm:block" />
+                <Plus size={16} strokeWidth={3} />
                 <span>ADD</span>
               </button>
             ) : (
-              <div className="flex items-center bg-orange-50 border-2 border-orange-500 rounded-xl overflow-hidden shrink-0">
+              <div className="flex items-center gap-3 bg-stone-900 text-white rounded-2xl px-2.5 py-1.5 sm:py-2 shadow-xl border border-stone-800">
                 <button
                   onClick={() => updateQuantity(item.id, qty - 1, item.variants ? selectedVariant : undefined)}
-                  className="px-2 py-1.5 hover:bg-orange-100 active:bg-orange-200 text-orange-600 font-bold transition-colors"
+                  className="p-1 hover:bg-white/10 rounded-lg transition-colors tap-feedback"
                 >
-                  <Minus size={12} />
+                  <Minus size={14} strokeWidth={3} />
                 </button>
-                <span className="font-extrabold text-orange-600 w-5 text-center text-xs sm:text-sm">{qty}</span>
+                <span className="text-sm font-black w-4 text-center">{qty}</span>
                 <button
                   onClick={handleAdd}
-                  className="px-2 py-1.5 hover:bg-orange-100 active:bg-orange-200 text-orange-600 font-bold transition-colors"
+                  className="p-1 hover:bg-white/10 rounded-lg transition-colors tap-feedback"
                 >
-                  <Plus size={12} />
+                  <Plus size={14} strokeWidth={3} />
                 </button>
               </div>
             )}
           </div>
         </div>
       </div>
-
-      {/* ── Bottom row (mobile only): description when available ── */}
-      {item.description && (
-        <p className="sm:hidden text-[10px] text-stone-400 px-2.5 pb-2.5 line-clamp-1">
-          {item.description}
-        </p>
-      )}
     </div>
   );
 }
