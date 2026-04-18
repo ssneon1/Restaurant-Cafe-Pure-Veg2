@@ -1,0 +1,136 @@
+@import "tailwindcss";
+
+/* ============================================================
+   GLOBAL ANIMATION KEYFRAMES
+   ============================================================ */
+
+/* Shimmer skeleton loader */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+/* Entrance: fade + slide up */
+@keyframes revealUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Entrance: fade in only */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Subtle floating pulse for badges */
+@keyframes badgePop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
+/* Spinner */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Page-level loading bar */
+@keyframes loadBar {
+  0%   { width: 0%;   opacity: 1; }
+  80%  { width: 90%;  opacity: 1; }
+  100% { width: 100%; opacity: 0; }
+}
+
+/* ============================================================
+   UTILITY CLASSES
+   ============================================================ */
+
+/* Shimmer skeleton */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #f3f4f6 25%,
+    #e5e7eb 37%,
+    #f3f4f6 63%
+  );
+  background-size: 400px 100%;
+  animation: shimmer 1.4s ease infinite;
+}
+
+/* Scroll-reveal: start hidden */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px) scale(0.97);
+  transition: opacity 0.55s cubic-bezier(0.22,1,0.36,1),
+              transform 0.55s cubic-bezier(0.22,1,0.36,1);
+}
+
+/* When JS adds .visible */
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Staggered children */
+.reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.5s cubic-bezier(0.22,1,0.36,1),
+              transform 0.5s cubic-bezier(0.22,1,0.36,1);
+}
+.reveal-stagger.visible > *:nth-child(1)  { transition-delay: 0.05s; opacity: 1; transform: none; }
+.reveal-stagger.visible > *:nth-child(2)  { transition-delay: 0.10s; opacity: 1; transform: none; }
+.reveal-stagger.visible > *:nth-child(3)  { transition-delay: 0.15s; opacity: 1; transform: none; }
+.reveal-stagger.visible > *:nth-child(4)  { transition-delay: 0.20s; opacity: 1; transform: none; }
+.reveal-stagger.visible > *:nth-child(5)  { transition-delay: 0.25s; opacity: 1; transform: none; }
+.reveal-stagger.visible > *:nth-child(6)  { transition-delay: 0.30s; opacity: 1; transform: none; }
+.reveal-stagger.visible > *:nth-child(n+7){ transition-delay: 0.35s; opacity: 1; transform: none; }
+
+/* Page loading bar */
+.page-load-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #f97316, #ef4444);
+  animation: loadBar 0.8s ease forwards;
+  z-index: 9999;
+  border-radius: 0 4px 4px 0;
+  box-shadow: 0 0 8px #f97316aa;
+}
+
+/* Card glow on hover */
+.card-hover {
+  transition: transform 0.25s cubic-bezier(0.22,1,0.36,1),
+              box-shadow 0.25s cubic-bezier(0.22,1,0.36,1),
+              border-color 0.25s ease;
+}
+.card-hover:hover {
+  transform: translateY(-5px) scale(1.015);
+  box-shadow: 0 16px 40px -8px rgba(249,115,22,0.22),
+              0 4px 12px -4px rgba(0,0,0,0.10);
+  border-color: #fb923c;
+}
+
+/* Image zoom on card hover (must be inside .card-hover) */
+.card-hover .img-zoom {
+  transition: transform 0.45s cubic-bezier(0.22,1,0.36,1);
+}
+.card-hover:hover .img-zoom {
+  transform: scale(1.08);
+}
+
+/* Smooth custom scrollbar */
+* { scrollbar-width: thin; scrollbar-color: #f97316 #f5f5f4; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #f5f5f4; }
+::-webkit-scrollbar-thumb { background: #f97316; border-radius: 6px; }
+
+/* Smooth global scroll */
+html { scroll-behavior: smooth; }

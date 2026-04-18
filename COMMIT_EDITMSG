@@ -1,0 +1,40 @@
+animation
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# On branch main
+# Your branch is ahead of 'origin/main' by 1 commit.
+#   (use "git push" to publish your local commits)
+#
+# Changes to be committed:
+#	new file:   .gitignore
+#	new file:   index.html
+#	new file:   package-lock.json
+#	new file:   package.json
+#	new file:   public/hero.jpg
+#	new file:   public/images/cafe.jpg
+#	new file:   public/images/cat-biryani.png
+#	new file:   public/images/cat-burger.png
+#	new file:   public/images/cat-desserts.png
+#	new file:   public/images/cat-north-indian.png
+#	new file:   public/images/cat-pizza.png
+#	new file:   public/images/cat-thali.png
+#	new file:   public/paneer.jpg
+#	new file:   public/thali.jpg
+#	new file:   src/App.tsx
+#	new file:   src/CartContext.tsx
+#	new file:   src/components/CartDrawer.tsx
+#	new file:   src/components/Layout.tsx
+#	new file:   src/components/MenuItemCard.tsx
+#	new file:   src/data.ts
+#	new file:   src/index.css
+#	new file:   src/main.tsx
+#	new file:   src/pages/About.tsx
+#	new file:   src/pages/Contact.tsx
+#	new file:   src/pages/Home.tsx
+#	new file:   src/pages/Menu.tsx
+#	new file:   src/pages/Offers.tsx
+#	new file:   src/utils/cn.ts
+#	new file:   tsconfig.json
+#	new file:   vite.config.ts
+#
